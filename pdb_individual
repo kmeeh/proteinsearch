@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Nov  4 14:52:32 2017
+https://www.rcsb.org/pdb/rest/sequenceCluster?cluster=40&structureId=4hhb.A
+@author: kmeeh
+"""
+
+"""
+Ask user for Structure ID input and find the sequence of the protein in the RCSB API database in XML format
+"""
+
+from urllib.request import urlopen
+import xml.etree.ElementTree as ET
+
+print("Input a Protein's structure ID to query RCSB for the protein's sequence")
+
+while True:
+    structureid = input("Enter structure ID: ")
+    try:
+        rcxburl = 'http://www.rcsb.org/pdb/rest/customReport.xml?pdbids='+ structureid + '&reportName=Sequence&service=wsfile&format=xml'
+        
+        #request to see data in url
+        data = urlopen(rcxburl).read()
+        tree = ET.fromstring(data)
+        
+        lst = tree.findall('.//VSequence.sequence')
+        
+        seqlist = []
+        
+        for i in lst:
+            seqlist.append(i.text)
+        
+        
+        print(seqlist)
+    except:
+        break
+  
+    
